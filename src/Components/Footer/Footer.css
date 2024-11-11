@@ -1,11 +1,12 @@
 .footer-container{
     width: 100%;
-    position: absolute;
-    bottom: 0px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
-    backdrop-filter: blur(10px); /* Stronger blur effect */
-    background: rgba(255, 255, 255, 0.1); 
+    background-color: #aed3d0; 
+    color: rgb(255, 255, 255); 
     padding: 10px;
-    color: white;
+    position: fixed;
+    z-index: 50;
+    bottom: 0;
+    height: 50px;
 }

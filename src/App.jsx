@@ -9,13 +9,10 @@ function App() {
     <>
     <div>
       <div className="app-container">
-
       <BrowserRouter>
       <Routes>
-
         <Route path = "/" element ={<LoginForm/>}/>
         <Route path = "/Admindashboard" element ={<Admindashboard/>}/>
-
       </Routes>
       </BrowserRouter>
 
