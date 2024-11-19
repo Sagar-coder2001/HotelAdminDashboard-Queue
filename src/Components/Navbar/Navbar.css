@@ -23,7 +23,6 @@ body[data-theme="light"] {
     background-color: white;
     color: black;
 }
-
 body[data-theme="dark"] {
     background-color: #04012e;
     color: white;
