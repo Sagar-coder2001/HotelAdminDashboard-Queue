@@ -44,6 +44,7 @@ const LoginForm = () => {
 
   const submitDetails = async (e) => {
     e.preventDefault();
+    navigate('/Admindashboard');
     try {
       const formdata = new FormData();
       formdata.append('username', userdetails.username);
