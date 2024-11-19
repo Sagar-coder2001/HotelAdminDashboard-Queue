@@ -51,6 +51,8 @@
   padding: 10px;
   transition: background 0.3s ease;
   cursor: pointer;
+  background-color: #34495e;
+  border-radius: 4px;
 }
 
 .sidebar ul li a:hover {
@@ -104,8 +106,9 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-  width: 50%;
+  width: 30%;
   height: 400px;
+  width: 500px;
   background-color: white;
 }
 
@@ -213,4 +216,65 @@
   .piechart {
     margin-top: 20px;
   }
+}
+
+/* employee manage */
+.addbtn button{
+  padding: 6px 10px;
+  border: none;
+  outline: none;
+  background-color: cadetblue;
+  color: white;
+  font-weight: 500;
+  border-radius: 4px;
+}
+.table-container{
+  width: 95%;
+  margin: 30px auto;
+  text-align: center;
+  overflow: auto;
+}
+.table-container table{
+  width: 100%;
+}
+.table-container table, tr, td{
+  padding: 10px;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.table-container tr:nth-child(odd) {
+  background-color: #aed3d0; 
+}
+
+
+/* user details */
+.user-details-card {
+  position: fixed;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-details-card button{
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.queuefetchbtn{
+  padding: 6px 10px;
+  border: none;
+  outline: none;
+  background-color: cadetblue;
+  color: white;
+  font-weight: 500;
+  border-radius: 4px;
 }

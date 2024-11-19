@@ -41,23 +41,14 @@ const Navbar = () => {
                     <div className="leftnavbar">
                         <a href="" className='ml-4'>Company Name</a>
                     </div>
-                    {
-                        loggedin && (
                             <>
-                                {/* <div className="middlenavbar">
-                                    <form className="d-flex" role="search">
-                                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                                        <button className="btn btn-outline-success" type="submit">Search</button>
-                                    </form>
-                                </div> */}
+
                                 <div className="rightnavbar">
                                     <i className="fa-solid fa-bell"></i>
                                     <i className="fa-solid fa-moon" onClick={toggleTheme} style={{ cursor: 'pointer' }}></i>
                                     <i className="fa-solid fa-user"></i>
                                 </div>
                             </>
-                        )
-                    }
                 </div>
             </header>
         </div>

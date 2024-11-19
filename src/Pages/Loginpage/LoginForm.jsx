@@ -13,11 +13,23 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Check local storage on mount
+  // State to track the theme (dark or light)
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  // Check local storage on mount to set the theme
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+      setIsDarkTheme(true);
+    } else {
+      setIsDarkTheme(false); // Default to light theme if not set
+    }
+  }, []);
+
+  // Check if the user is already logged in and redirect to dashboard if true
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
-      // Clear local storage and redirect to dashboard
       localStorage.removeItem('isLoggedIn');
       navigate('/');
     }
@@ -57,23 +69,44 @@ const LoginForm = () => {
   return (
     <div>
       <Layout>
-        <div className="login-container">
+        {/* Apply dynamic class for background color based on the theme */}
+        <div className={`login-container ${isDarkTheme ? 'dark' : 'light'}`}>
           <div className="card-container">
             <form>
-              <h4 className='text-center fs-2'>Hotel Login</h4>
+              <h4 className="text-center fs-2">Hotel Login</h4>
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">Username</label>
-                <input type="email" className="form-control" value={userdetails.username} onChange={onchangetext} id="username" name='username' />
+                <input 
+                  type="email" 
+                  className="form-control" 
+                  value={userdetails.username} 
+                  onChange={onchangetext} 
+                  id="username" 
+                  name="username" 
+                />
               </div>
               <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
-                <input type="password" className="form-control" value={userdetails.password} onChange={onchangetext} name='password' id="password" />
+                <input 
+                  type="password" 
+                  className="form-control" 
+                  value={userdetails.password} 
+                  onChange={onchangetext} 
+                  name="password" 
+                  id="password" 
+                />
               </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label htmlFor="form-check-label">Check me out</label>
               </div>
-              <button type="submit" className="btn mt-2" onClick={submitDetails}><strong>Submit</strong></button>
+              <button 
+                type="submit" 
+                className="btn mt-2" 
+                onClick={submitDetails}
+              >
+                <strong>Submit</strong>
+              </button>
             </form>
           </div>
         </div>
