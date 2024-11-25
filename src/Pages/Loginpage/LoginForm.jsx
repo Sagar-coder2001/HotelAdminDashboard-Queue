@@ -13,20 +13,18 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // State to track the theme (dark or light)
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  // Check local storage on mount to set the theme
+
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme === 'dark') {
       setIsDarkTheme(true);
     } else {
-      setIsDarkTheme(false); // Default to light theme if not set
+      setIsDarkTheme(false);
     }
   }, []);
 
-  // Check if the user is already logged in and redirect to dashboard if true
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (isLoggedIn === 'true') {
@@ -44,12 +42,11 @@ const LoginForm = () => {
 
   const submitDetails = async (e) => {
     e.preventDefault();
-    navigate('/Admindashboard');
+    // navigate('/Hotel_dashboard');
     try {
       const formdata = new FormData();
       formdata.append('username', userdetails.username);
       formdata.append('password', userdetails.password);
-
       const response = await fetch('http://192.168.1.25/Queue/login.php?do=login&hotel_id=HOT000002', {
         method: 'POST',
         body: formdata,
@@ -60,7 +57,7 @@ const LoginForm = () => {
       if (data.Status === true) {
         localStorage.setItem('isLoggedIn', 'true');
         dispatch(userlogin());
-        navigate('/Admindashboard', { state: { tokenid: data.Token, username: userdetails.username } });
+        navigate('/Hotel_dashboard', { state: { tokenid: data.Token, username: userdetails.username } });
       }
     } catch (err) {
       console.log(err);

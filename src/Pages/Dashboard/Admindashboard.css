@@ -16,16 +16,14 @@
   align-items: flex-start;
   z-index: 100; /* Ensure sidebar is on top */
   top: 0; /* Keep it fixed to the top */
+  overflow-y: auto;
 }
-
 .sidebar {
   width: 100%;
 }
-
 .middle {
   text-align: center;
 }
-
 .middle a {
   color: #fff;
   font-size: 22px;
@@ -38,11 +36,9 @@
   list-style-type: none;
   padding: 0;
 }
-
 .sidebar ul li {
   margin: 15px 0;
 }
-
 .sidebar ul li a {
   color: #bdc3c7;
   text-decoration: none;
@@ -54,28 +50,23 @@
   background-color: #34495e;
   border-radius: 4px;
 }
-
 .sidebar ul li a:hover {
   background-color: #34495e;
 }
-
 .dashboard-container {
   flex-grow: 1;
   margin-left: 220px; /* Offset the content by the sidebar's width */
   padding: 20px;
   overflow-y: auto; /* Allow scrolling if the content overflows */
 }
-
 .upper-dashboard {
   text-align: center;
   margin-bottom: 30px;
 }
-
 .upper-dashboard h3 {
   font-size: 2rem;
   margin-top: 10px;
 }
-
 .upper {
   color: black;
   display: flex;
@@ -83,7 +74,6 @@
   flex-wrap: wrap;
   margin-top: 20px;
 }
-
 .col4 {
   background-color: #ecf0f1;
   padding: 20px;
@@ -93,14 +83,12 @@
   margin-bottom: 15px;
   text-align: center;
 }
-
 .lower {
   display: flex;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 60px;
 }
-
 .col6 {
   flex: 1;
   padding: 20px;
@@ -111,11 +99,9 @@
   width: 500px;
   background-color: white;
 }
-
 .piechart {
   margin-bottom: 60px;
 }
-
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   /* Keep the sidebar fixed at all sizes above 768px */
@@ -123,27 +109,22 @@
     margin-left: 220px; /* Keep content offset by sidebar width */
     padding: 15px;
   }
-
   .upper {
     flex-direction: column;
     align-items: center;
   }
-
   .col4 {
     width: 100%;
     margin-bottom: 10px;
   }
-
   .lower {
     flex-direction: column;
     align-items: center;
   }
-
   .col6 {
     width: 100%;
     margin-bottom: 20px;
   }
-
   .piechart {
     margin-top: 20px;
   }
@@ -159,7 +140,6 @@
     flex-direction: column;
     align-items: center;
   }
-
   .col4 {
     width: 100%;
     margin-bottom: 10px;
@@ -236,6 +216,9 @@
 }
 .table-container table{
   width: 100%;
+  border: 2px solid;
+  margin-bottom: 30px;
+  background-color: white;
 }
 .table-container table, tr, td{
   padding: 10px;

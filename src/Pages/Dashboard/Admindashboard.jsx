@@ -25,8 +25,19 @@ const Admindashboard = () => {
   }
 
   const opentable = () => {
-    navigate('/Table_dashboard');
+    navigate('/Table_dashboard', {
+      state: { tokenid: token, username: user }
+    });
   }
+
+  // useEffect(() => {
+  //   if (token && user) {
+  //     navigate('/Hotel_dashboard', {
+  //       state: { tokenid: token, username: user }
+  //     });
+  //   }
+  // }, [token, user, navigate]);
+  
   const openhoteldashboard = () => {
     navigate('/Hotel_dashboard', {
       state: { tokenid: token, username: user }
@@ -39,9 +50,6 @@ const Admindashboard = () => {
     });
   }
  
-
-  
-
   return (
     <Layout>
       {/* <div className="admin-dashboard"> */}
