@@ -216,9 +216,11 @@
 }
 .table-container table{
   width: 100%;
-  border: 2px solid;
   margin-bottom: 30px;
   background-color: white;
+  color: black;
+  border-radius: 5px;
+
 }
 .table-container table, tr, td{
   padding: 10px;
@@ -227,10 +229,9 @@
 }
 
 .table-container tr:nth-child(odd) {
-  background-color: #aed3d0; 
+  color: black;
+  background-color: #c3d1d0; 
 }
-
-
 /* user details */
 .user-details-card {
   position: fixed;
@@ -246,6 +247,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  color: black;
 }
 .user-details-card button{
   position: absolute;

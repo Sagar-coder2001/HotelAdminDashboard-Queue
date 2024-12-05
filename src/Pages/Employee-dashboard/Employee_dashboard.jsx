@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../Dashboard/Admindashboard.css';
-
 import Layout from '../../Components/Layout/Layout';
 import Admindashboard from '../Dashboard/Admindashboard';
 
@@ -15,19 +14,23 @@ const Employee_dashboard = () => {
   const [password, setPassword] = useState('');
   const [userExist, setUserExist] = useState(false);
   const [allUserdata, setAllUserdata] = useState([]);
-  const [selectedRole, setSelectedRole] = useState('emp'); // State to track the selected role
+  const [selectedRole, setSelectedRole] = useState('emp');
+  
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(10); // Number of users to display per page
 
   const navigate = useNavigate();
 
+  // Handle user form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();  // Prevent form from reloading the page
+    e.preventDefault();
     const formData = new FormData();
     formData.append('username', user);
     formData.append('token', token);
     formData.append('new_user', newuser);
     formData.append('password', password);
-    formData.append('role', selectedRole); // Send the selected role
-
+    formData.append('role', selectedRole); 
     try {
       const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=add', {
         method: 'POST',
@@ -45,10 +48,7 @@ const Employee_dashboard = () => {
         setUserExist(true);
       }
 
-      // Close the modal after successful submission
       setOpenModal(false);
-
-      // Optionally, you can reset the form fields
       setNewuser('');
       setPassword('');
       setSelectedRole('emp'); // Reset role to default after submission
@@ -59,6 +59,7 @@ const Employee_dashboard = () => {
     }
   };
 
+  // Fetch user data
   useEffect(() => {
     const fetchData = async () => {
       const formData = new FormData();
@@ -76,7 +77,6 @@ const Employee_dashboard = () => {
         }
 
         const data = await response.json();
-        console.log('hotel data:', data.User);
         setAllUserdata(data.User);
         if (data.Status === false) {
           setUserExist(true);
@@ -91,37 +91,37 @@ const Employee_dashboard = () => {
     };
 
     fetchData();
-
   }, [token, user]);
 
   const userlogout = async (delete_user) => {
-    const formData = new FormData();
-    formData.append('username', user);
-    formData.append('token', token);
-    formData.append('delete_user', delete_user);
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (confirmDelete) {
+      const formData = new FormData();
+      formData.append('username', user);
+      formData.append('token', token);
+      formData.append('delete_user', delete_user);
 
-    try {
-      const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=remove', {
-        method: 'POST',
-        body: formData,
-      });
+      try {
+        const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=remove', {
+          method: 'POST',
+          body: formData,
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit the data');
+        if (!response.ok) {
+          throw new Error('Failed to submit the data');
+        }
+
+        const data = await response.json();
+        console.log('User removed successfully:', data);
+        setOpenModal(false);
+        setNewuser('');
+        setPassword('');
+      } catch (error) {
+        console.error('Error submitting data:', error);
+        alert('Error: ' + error.message);
       }
-
-      const data = await response.json();
-      console.log('User added successfully:', data);
-
-      // Close the modal after successful submission
-      setOpenModal(false);
-
-      // Optionally, you can reset the form fields
-      setNewuser('');
-      setPassword('');
-    } catch (error) {
-      console.error('Error submitting data:', error);
-      alert('Error: ' + error.message);
+    } else {
+      console.log('User deletion cancelled.');
     }
   };
 
@@ -129,6 +129,19 @@ const Employee_dashboard = () => {
     console.log("add");
     setOpenModal(true);
   };
+
+  // Logic for Pagination
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = allUserdata.slice(indexOfFirstUser, indexOfLastUser);
+
+  // Change page handler
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(allUserdata.length / usersPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <Layout>
@@ -223,7 +236,7 @@ const Employee_dashboard = () => {
             <div className="table-container">
               <table className="custom-table">
                 <thead>
-                  <tr style={{ backgroundColor: 'white' }}>
+                  <tr style={{ backgroundColor: 'black', color:'white' }}>
                     <th style={{ padding: '10px' }}>Sr. No</th>
                     <th>Username</th>
                     <th>Role</th>
@@ -231,12 +244,12 @@ const Employee_dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {allUserdata.length ? (
-                    allUserdata.map((emp, index) => (
+                  {currentUsers.length ? (
+                    currentUsers.map((emp, index) => (
                       <tr key={index} style={{ cursor: 'pointer', position: 'relative' }}>
                         <td>
                           <span>
-                            {index + 1}
+                            {index + 1 + (currentPage - 1) * usersPerPage}
                           </span>
                         </td>
                         <td>{emp.Username}</td>
@@ -261,6 +274,20 @@ const Employee_dashboard = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="pagination">
+              {pageNumbers.map((number) => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={currentPage === number ? 'active' : ''}
+                  style={{padding:'5px 8px', border:'none', borderRadius:'2px' }}
+                >
+                  {number}
+                </button>
+              ))}
             </div>
           </div>
         </div>

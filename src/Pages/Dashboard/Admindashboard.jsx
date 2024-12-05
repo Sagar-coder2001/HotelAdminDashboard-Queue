@@ -15,7 +15,7 @@ const Admindashboard = () => {
 
   const handlelogout = () => {
     localStorage.removeItem('isLoggedIn',);
-    // navigate('/');
+    navigate('/');
   }
 
 

@@ -35,8 +35,7 @@
 
 .card-container form button {
     width: 100%;
-    background-color: #aed3d0; 
-
+    background-color: #aed3d0;
 }
 
 .loginnavbar {
@@ -64,4 +63,25 @@
 .middle {
     font-size: 18px;
     color: white;
+}
+
+.showerr{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 2000;
+    flex-direction: column;
+    border: 1px solid;
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 4px;
+}
+.showerr button{
+    padding: 0px 6px;
+    margin-top: 5px;
+    border: none;
+    outline: none;
+    background-color: #aed3d0;
 }

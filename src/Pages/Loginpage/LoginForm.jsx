@@ -12,6 +12,8 @@ const LoginForm = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showerr , setshowerr] = useState(false)
+  const [filepath , setfilepath] = useState('')
 
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -40,6 +42,15 @@ const LoginForm = () => {
     }));
   };
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const file = queryParams.get('HID');
+
+    setfilepath(file);
+  }, [])
+
+
   const submitDetails = async (e) => {
     e.preventDefault();
     // navigate('/Hotel_dashboard');
@@ -47,7 +58,7 @@ const LoginForm = () => {
       const formdata = new FormData();
       formdata.append('username', userdetails.username);
       formdata.append('password', userdetails.password);
-      const response = await fetch('http://192.168.1.25/Queue/login.php?do=login&hotel_id=HOT000002', {
+      const response = await fetch(`http://192.168.1.25/Queue/login.php?do=login&hotel_id=${filepath}`, {
         method: 'POST',
         body: formdata,
       });
@@ -59,6 +70,9 @@ const LoginForm = () => {
         dispatch(userlogin());
         navigate('/Hotel_dashboard', { state: { tokenid: data.Token, username: userdetails.username } });
       }
+      if(data.Status === false){
+        setshowerr(true);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -69,7 +83,18 @@ const LoginForm = () => {
       <Layout>
         {/* Apply dynamic class for background color based on the theme */}
         <div className={`login-container ${isDarkTheme ? 'dark' : 'light'}`}>
-          <div className="card-container">
+          {
+            showerr ? (
+              <>
+              <div className="showerr">
+                <div>
+                <span>Invalid Credentials</span>
+                </div>
+                <button onClick={() => setshowerr(false)}>ok</button>
+              </div>
+              </>
+            ) : 
+            <div className="card-container">
             <form>
               <h4 className="text-center fs-2">Hotel Login</h4>
               <div className="mb-3">
@@ -107,6 +132,8 @@ const LoginForm = () => {
               </button>
             </form>
           </div>
+          }
+       
         </div>
       </Layout>
     </div>
