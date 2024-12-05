@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import '../Dashboard/Admindashboard.css';
 import Layout from '../../Components/Layout/Layout';
 import Admindashboard from '../Dashboard/Admindashboard';
+import '../Employee-dashboard/Employeedashboard.css';
 
 const Employee_dashboard = () => {
   const location = useLocation();
@@ -15,7 +16,9 @@ const Employee_dashboard = () => {
   const [userExist, setUserExist] = useState(false);
   const [allUserdata, setAllUserdata] = useState([]);
   const [selectedRole, setSelectedRole] = useState('emp');
-  
+  const [delpopbox, setdelpopbox] = useState(false);
+  const [confirmdel, setconfirmdel] = useState(false);
+
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10); // Number of users to display per page
@@ -30,7 +33,7 @@ const Employee_dashboard = () => {
     formData.append('token', token);
     formData.append('new_user', newuser);
     formData.append('password', password);
-    formData.append('role', selectedRole); 
+    formData.append('role', selectedRole);
     try {
       const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=add', {
         method: 'POST',
@@ -93,9 +96,26 @@ const Employee_dashboard = () => {
     fetchData();
   }, [token, user]);
 
+
+  const userlogoutpopbox = (delete_user) => {
+    setdelpopbox(true);
+    setconfirmdel(delete_user);
+  };
+
+  const handleConfirmDelete = () => {
+    userlogout(confirmdel);
+    setdelpopbox(false);
+    setconfirmdel(null);
+  };
+
+  const handleCancelDelete = () => {
+    setdelpopbox(false);
+    setconfirmdel(null);
+  };
+
+
   const userlogout = async (delete_user) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (confirmDelete) {
+
       const formData = new FormData();
       formData.append('username', user);
       formData.append('token', token);
@@ -120,9 +140,6 @@ const Employee_dashboard = () => {
         console.error('Error submitting data:', error);
         alert('Error: ' + error.message);
       }
-    } else {
-      console.log('User deletion cancelled.');
-    }
   };
 
   const addEmpUser = () => {
@@ -138,6 +155,7 @@ const Employee_dashboard = () => {
   // Change page handler
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(allUserdata.length / usersPerPage); i++) {
     pageNumbers.push(i);
@@ -207,6 +225,16 @@ const Employee_dashboard = () => {
             </div>
           )}
 
+          {delpopbox && (
+            <div className="delpopup">
+              <div className="popup-content">
+                <p> <strong>Are you sure you want to delete this user?</strong></p>
+                <button onClick={handleConfirmDelete} className='okbtn'>OK</button>
+                <button onClick={handleCancelDelete}>Cancel</button>
+              </div>
+            </div>
+          )}
+
           {userExist && (
             <div className='user-details-card'>
               <div className="card" style={{ padding: '10px', marginTop: '20px' }}>
@@ -236,7 +264,7 @@ const Employee_dashboard = () => {
             <div className="table-container">
               <table className="custom-table">
                 <thead>
-                  <tr style={{ backgroundColor: 'black', color:'white' }}>
+                  <tr style={{ backgroundColor: 'black', color: 'white' }}>
                     <th style={{ padding: '10px' }}>Sr. No</th>
                     <th>Username</th>
                     <th>Role</th>
@@ -258,7 +286,7 @@ const Employee_dashboard = () => {
                           <span
                             className="data-bs-toggle"
                             data-bs-target="#exampleModal"
-                            onClick={() => userlogout(emp.Username)}
+                            onClick={() => userlogoutpopbox(emp.Username)}
                           >
                             <i className="fa-solid fa-trash text-danger"></i>
                           </span>
@@ -283,7 +311,7 @@ const Employee_dashboard = () => {
                   key={number}
                   onClick={() => paginate(number)}
                   className={currentPage === number ? 'active' : ''}
-                  style={{padding:'5px 8px', border:'none', borderRadius:'2px' }}
+                  style={{ padding: '5px 8px', border: 'none', borderRadius: '2px' }}
                 >
                   {number}
                 </button>
