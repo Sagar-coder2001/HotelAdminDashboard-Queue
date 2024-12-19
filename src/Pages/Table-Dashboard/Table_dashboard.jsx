@@ -4,6 +4,7 @@ import Layout from '../../Components/Layout/Layout';
 import Admindashboard from '../Dashboard/Admindashboard';
 import { useLocation } from 'react-router-dom';
 import '../../Pages/Table-Dashboard/Table_dashboard.css';
+import { useSelector } from 'react-redux';
 
 const Table_dashboard = () => {
     const location = useLocation();
@@ -23,7 +24,13 @@ const Table_dashboard = () => {
 
     // Pagination States
     const [currentPage, setCurrentPage] = useState(1);
-    const [tablesPerPage] = useState(10);
+    const [tablesPerPage] = useState(5);
+
+    const bgcolor = useSelector((state) => state.theme.navbar);
+    const textcolor = useSelector((state) => state.theme.textcolor);
+
+    const modalbg = useSelector((state) => state.theme.modal);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -112,7 +119,7 @@ const Table_dashboard = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setOpenModal(false);
-        let tableTypeValue = tabletype === 'ac' ? 1 : 0;
+        let tableTypeValue = tabletype === '0' ? 0 : 1;
         const formData = new FormData();
         formData.append('username', user);
         formData.append('token', token);
@@ -147,21 +154,22 @@ const Table_dashboard = () => {
         }
     };
 
-    // Pagination logic
-    const indexOfLastTable = currentPage * tablesPerPage;
-    const indexOfFirstTable = indexOfLastTable - tablesPerPage;
-    const currentAcTables = actable.slice(indexOfFirstTable, indexOfLastTable);
-    const currentNonAcTables = nonactable.slice(indexOfFirstTable, indexOfLastTable);
+   // Pagination logic
+   const indexOfLastTable = currentPage * tablesPerPage;
+   const indexOfFirstTable = indexOfLastTable - tablesPerPage;
+   const currentAcTables = actable.slice(indexOfFirstTable, indexOfLastTable);
+   const currentNonAcTables = nonactable.slice(indexOfFirstTable, indexOfLastTable);
 
-    // Change page handler
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+   const pageNumbers = [];
+   const totalTables = [...actable, ...nonactable];
+   for (let i = 1; i <= Math.ceil(totalTables.length / tablesPerPage); i++) {
+       pageNumbers.push(i);
+   }
 
-    const pageNumbers = [];
-    const totalTables = [...actable, ...nonactable];
-    for (let i = 1; i <= Math.ceil(totalTables.length / tablesPerPage); i++) {
-        pageNumbers.push(i);
-    }
-
+   // Function to handle pagination
+   const paginate = (pageNumber) => {
+       setCurrentPage(pageNumber);
+   };
     setTimeout(() => {
         setopenaddedpop(false)
     }, 4000);
@@ -195,7 +203,7 @@ const Table_dashboard = () => {
                     )}
 
                     {openModal && (
-                        <div className="user-details-card text-center">
+                        <div className="user-details-card text-center" style={{ backgroundColor: modalbg, color: textcolor }}>
                             <form>
                                 <h3>
                                     Table Added
@@ -227,8 +235,8 @@ const Table_dashboard = () => {
                                     <label htmlFor="role" className="col-4 col-form-label text-start">Table type</label>
                                     <div className="col-8">
                                         <select name="" id="" value={tabletype} className='form-control' onChange={(e) => setTableType(e.target.value)}>
-                                            <option value="AC">AC</option>
-                                            <option value="NON AC">NON AC</option>
+                                            <option value="1">AC</option>
+                                            <option value="0">NON AC</option>
                                         </select>
                                     </div>
                                 </div>
@@ -244,7 +252,7 @@ const Table_dashboard = () => {
                         <h4>Table Management</h4>
                         <table className="custom-table">
                             <thead>
-                                <tr style={{ backgroundColor: 'black', color: 'white' }}>
+                                <tr style={{ backgroundColor: bgcolor, color: textcolor }}>
                                     <th style={{ padding: '10px' }}>Sr. No</th>
                                     <th>Table Size</th>
                                     <th>AC / NON-AC</th>
@@ -310,7 +318,16 @@ const Table_dashboard = () => {
 
                         {/* Pagination Controls */}
                         <div className="pagination">
-                            {pageNumbers.map((number) => (
+                            <button
+                            className='btn btn-info'
+                                onClick={() => paginate(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                            >
+                                Prev
+                            </button>
+
+                            {/* {pageNumbers.map((number) => (
                                 <button
                                     key={number}
                                     onClick={() => paginate(number)}
@@ -319,7 +336,17 @@ const Table_dashboard = () => {
                                 >
                                     {number}
                                 </button>
-                            ))}
+                            ))} */}
+                            <span style={{margin:'8px'}}>{currentPage}</span>
+
+                            <button
+                             className='btn btn-info'
+                                onClick={() => paginate(currentPage + 1)}
+                                disabled={currentPage === pageNumbers.length}
+                                style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === pageNumbers.length ? 'not-allowed' : 'pointer' }}
+                            >
+                                Next
+                            </button>
                         </div>
                     </div>
                 </div>

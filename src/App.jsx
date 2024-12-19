@@ -5,8 +5,14 @@ import Admindashboard from './Pages/Dashboard/Admindashboard'
 import Table_dashboard from './Pages/Table-Dashboard/Table_dashboard'
 import Hotel_dashboard from './Pages/Hotel-Dashboard/Hotel_dashboard'
 import Employee_dashboard from './Pages/Employee-dashboard/Employee_dashboard'
+import { useSelector } from 'react-redux'
 
 function App() {
+
+  const bgcolor = useSelector((state) => state.theme.value);
+  const textcolors = useSelector((state) => state.theme.textcolor)
+  document.body.style.backgroundColor = bgcolor;
+  document.body.style.color = textcolors;
 
   return (
     <>

@@ -220,6 +220,7 @@
   background-color: white;
   color: black;
   border-radius: 5px;
+  border: 1px solid;
 
 }
 .table-container table, tr, td{

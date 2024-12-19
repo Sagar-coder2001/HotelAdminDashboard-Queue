@@ -4,6 +4,7 @@ import '../Dashboard/Admindashboard.css';
 import Layout from '../../Components/Layout/Layout';
 import Admindashboard from '../Dashboard/Admindashboard';
 import '../Employee-dashboard/Employeedashboard.css';
+import { useSelector } from 'react-redux';
 
 const Employee_dashboard = () => {
   const location = useLocation();
@@ -18,10 +19,13 @@ const Employee_dashboard = () => {
   const [selectedRole, setSelectedRole] = useState('emp');
   const [delpopbox, setdelpopbox] = useState(false);
   const [confirmdel, setconfirmdel] = useState(false);
+  const bgcolor = useSelector((state) => state.theme.navbar);
+  const modalbg = useSelector((state) => state.theme.modal)
+  const color = useSelector((state) => state.theme.textcolor)
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10); // Number of users to display per page
+  const [usersPerPage] = useState(4); // Number of users to display per page
 
   const navigate = useNavigate();
 
@@ -147,19 +151,21 @@ const Employee_dashboard = () => {
     setOpenModal(true);
   };
 
-  // Logic for Pagination
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = allUserdata.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = Array.isArray(allUserdata) ? allUserdata.slice(indexOfFirstUser, indexOfLastUser) : [];
+  const totalPages = Math.ceil(Array.isArray(allUserdata) ? allUserdata.length / usersPerPage : 0); 
 
-  // Change page handler
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(allUserdata.length / usersPerPage); i++) {
-    pageNumbers.push(i);
-  }
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <Layout>
@@ -170,7 +176,7 @@ const Employee_dashboard = () => {
             <button className='mt-4' onClick={addEmpUser}>Add User</button>
           </div>
           {openModal && (
-            <div className="user-details-card text-center">
+            <div className="user-details-card text-center" style={{backgroundColor : modalbg, color : color}}>
               <form>
                 <h3>User Details</h3>
                 <button
@@ -264,7 +270,7 @@ const Employee_dashboard = () => {
             <div className="table-container">
               <table className="custom-table">
                 <thead>
-                  <tr style={{ backgroundColor: 'black', color: 'white' }}>
+                  <tr style={{ backgroundColor: bgcolor, color: color }}>
                     <th style={{ padding: '10px' }}>Sr. No</th>
                     <th>Username</th>
                     <th>Role</th>
@@ -272,7 +278,7 @@ const Employee_dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentUsers.length ? (
+                  {currentUsers ? (
                     currentUsers.map((emp, index) => (
                       <tr key={index} style={{ cursor: 'pointer', position: 'relative' }}>
                         <td>
@@ -306,17 +312,16 @@ const Employee_dashboard = () => {
 
             {/* Pagination Controls */}
             <div className="pagination">
-              {pageNumbers.map((number) => (
-                <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={currentPage === number ? 'active' : ''}
-                  style={{ padding: '5px 8px', border: 'none', borderRadius: '2px' }}
-                >
-                  {number}
-                </button>
-              ))}
-            </div>
+            <button onClick={handlePrevPage} className='btn btn-info' disabled={currentPage === 1}>
+              Previous
+            </button>
+            <span style={{margin:'8px'}}>
+              {currentPage}
+            </span>
+            <button onClick={handleNextPage} className='btn btn-info' disabled={currentPage === totalPages}>
+              Next
+            </button>
+          </div>
           </div>
         </div>
       </div>
