@@ -14,6 +14,8 @@ import { Bar, Pie } from 'react-chartjs-2'; // Corrected Pie import
 
 import { useNavigate } from 'react-router-dom';
 
+
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,8 +28,12 @@ ChartJS.register(
 import { useLocation } from 'react-router-dom';
 import Layout from '../../Components/Layout/Layout';
 import Admindashboard from '../Dashboard/Admindashboard';
+import { useSelector } from 'react-redux';
 
 const Hotel_dashboard = () => {
+
+const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
+
 
   const [barData, setBarData] = useState({
     labels: [],
@@ -52,10 +58,10 @@ const Hotel_dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { tokenid, username } = location.state || {}; 
+  // const { tokenid, username } = location.state || {}; 
 
-  const [token, setToken] = useState(tokenid || ''); 
-  const [user, setUser] = useState(username || '');
+  // const [token, setToken] = useState(tokenid || ''); 
+  // const [user, setUser] = useState(username || '');
 
   const [pieData, setPieData] = useState({
     labels: ['AC People', 'Non-AC People', 'Total People'],
@@ -85,13 +91,13 @@ const Hotel_dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!token || !user) {
+        if (!token || !username) {
           throw new Error('User credentials are missing');
         }
 
         const formdata = new FormData();
         formdata.append('token', token);
-        formdata.append('username', user);
+        formdata.append('username', username);
 
         const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/dashboard.php', {
           method: 'POST',
@@ -102,6 +108,10 @@ const Hotel_dashboard = () => {
 
         const data = await response.json();
         console.log('API Response:', data);
+
+        if(data.Authentication === false){
+          navigate('/');
+        }
 
         const lastThreeDates = getLastThreeDates();
         console.log('Last Three Dates:', lastThreeDates);
@@ -187,8 +197,8 @@ const Hotel_dashboard = () => {
         <div className="col6 piechart">
           <Pie
             data={pieData}
-            width={300}
-            height={300}
+            width={100}
+            height={100}
             options={{
               responsive: true,
               plugins: {

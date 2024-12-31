@@ -8,7 +8,7 @@ const initialState = storedTheme === 'white' ? {
   textcolor: 'black',
   modal: 'whitesmoke'
 } : {
-  value: '#0E1027',
+  value: '#041C32',
   navbar: 'black',
   textcolor: 'white',
   modal: '#495057'

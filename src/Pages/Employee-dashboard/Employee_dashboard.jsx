@@ -8,9 +8,9 @@ import { useSelector } from 'react-redux';
 
 const Employee_dashboard = () => {
   const location = useLocation();
-  const { tokenid, username } = location.state || {};
-  const [token, setToken] = useState(tokenid || '');
-  const [user, setUsername] = useState(username || '');
+  // const { tokenid, username } = location.state || {};
+  // const [token, setToken] = useState(tokenid || '');
+  // const [user, setUsername] = useState(username || '');
   const [openModal, setOpenModal] = useState(false);
   const [newuser, setNewuser] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +22,9 @@ const Employee_dashboard = () => {
   const bgcolor = useSelector((state) => state.theme.navbar);
   const modalbg = useSelector((state) => state.theme.modal)
   const color = useSelector((state) => state.theme.textcolor)
+  const {token, username } = useSelector((state) => state.loggedin);
+  const [useraddloading , setauseraddloading] = useState(false);
+  
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,9 +34,10 @@ const Employee_dashboard = () => {
 
   // Handle user form submission
   const handleSubmit = async (e) => {
+    setauseraddloading(true)
     e.preventDefault();
     const formData = new FormData();
-    formData.append('username', user);
+    formData.append('username', username);
     formData.append('token', token);
     formData.append('new_user', newuser);
     formData.append('password', password);
@@ -51,6 +55,10 @@ const Employee_dashboard = () => {
       const data = await response.json();
       console.log('User added successfully:', data);
 
+      if(data.Status === true){
+        window.location.reload();
+      }
+
       if (data.Status === false) {
         setUserExist(true);
       }
@@ -64,13 +72,16 @@ const Employee_dashboard = () => {
       console.error('Error submitting data:', error);
       alert('Error: ' + error.message);
     }
+    finally{
+      setauseraddloading(false);
+    }
   };
 
   // Fetch user data
   useEffect(() => {
     const fetchData = async () => {
       const formData = new FormData();
-      formData.append('username', user);
+      formData.append('username', username);
       formData.append('token', token);
 
       try {
@@ -84,8 +95,9 @@ const Employee_dashboard = () => {
         }
 
         const data = await response.json();
+        console.log(data)
         setAllUserdata(data.User);
-        if (data.Status === false) {
+        if(data.Status === false) {
           setUserExist(true);
         }
         setOpenModal(false);
@@ -98,7 +110,7 @@ const Employee_dashboard = () => {
     };
 
     fetchData();
-  }, [token, user]);
+  }, [token, username]);
 
 
   const userlogoutpopbox = (delete_user) => {
@@ -119,9 +131,9 @@ const Employee_dashboard = () => {
 
 
   const userlogout = async (delete_user) => {
-
+    setauseraddloading(true)
       const formData = new FormData();
-      formData.append('username', user);
+      formData.append('username', username);
       formData.append('token', token);
       formData.append('delete_user', delete_user);
 
@@ -140,11 +152,16 @@ const Employee_dashboard = () => {
         setOpenModal(false);
         setNewuser('');
         setPassword('');
+        window.location.reload();
       } catch (error) {
         console.error('Error submitting data:', error);
         alert('Error: ' + error.message);
       }
+      finally{
+        setauseraddloading(false)
+      }
   };
+
 
   const addEmpUser = () => {
     console.log("add");
@@ -240,6 +257,18 @@ const Employee_dashboard = () => {
               </div>
             </div>
           )}
+
+{
+          useraddloading && (
+            <>
+              <div className="loader-overlay delpopup">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+            </>
+          )
+        }
 
           {userExist && (
             <div className='user-details-card'>

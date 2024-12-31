@@ -38,6 +38,10 @@
     background-color: #aed3d0;
 }
 
+.card-container form button:hover{
+    background-color: #aed3d0;
+}
+
 .loginnavbar {
     display: flex;
     justify-content: space-between;
@@ -66,11 +70,6 @@
 }
 
 .showerr{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    z-index: 2000;
     flex-direction: column;
     border: 1px solid;
     padding: 20px;

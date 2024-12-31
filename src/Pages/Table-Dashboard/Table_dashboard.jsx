@@ -8,23 +8,24 @@ import { useSelector } from 'react-redux';
 
 const Table_dashboard = () => {
     const location = useLocation();
-    const { tokenid, username } = location.state || {};
     const [alluserdata, setAllUserdata] = useState([]);
     const [actable, setAcTable] = useState([]);  // AC tables
     const [nonactable, setNonAcTable] = useState([]);  // NON-AC tables  
-    const [token, setToken] = useState(tokenid || '');
-    const [user, setUsername] = useState(username || '');
     const [openModal, setOpenModal] = useState(false);
     const [tablesize, setTableSize] = useState('');
     const [tabletype, setTableType] = useState('');
     const [openaddedpop, setopenaddedpop] = useState(false);
     const [showmsg, setShowMsg] = useState('');
     const [delpopbox, setdelpopbox] = useState(false);
-    const [confirmdel, setconfirmdel] = useState(false);
+    const [confirmUsername, setConfirmUsername] = useState(null); // Separate state for username
+    const [confirmTableType, setConfirmTableType] = useState(null);
+    const [useraddloading , setauseraddloading] = useState(false)
+
+    const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
 
     // Pagination States
     const [currentPage, setCurrentPage] = useState(1);
-    const [tablesPerPage] = useState(5);
+    const [tablesPerPage] = useState(3);
 
     const bgcolor = useSelector((state) => state.theme.navbar);
     const textcolor = useSelector((state) => state.theme.textcolor);
@@ -34,12 +35,12 @@ const Table_dashboard = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!user || !token) {
+            if (!username || !token) {
                 return;
             }
 
             const formData = new FormData();
-            formData.append('username', user);
+            formData.append('username', username);
             formData.append('token', token);
 
             try {
@@ -64,17 +65,20 @@ const Table_dashboard = () => {
         };
 
         fetchData();
-    }, [token, user]);
+    }, [token, username]);
 
 
 
-    const userlogoutpopbox = (username, table_type) => {
+    const userlogoutpopbox = (user, table_type) => {
         setdelpopbox(true);
-        setconfirmdel(username, table_type);
+        setConfirmUsername(user);  // Set username to state
+        setConfirmTableType(table_type);
     };
 
     const handleConfirmDelete = () => {
-        userlogout(confirmdel);
+        if (confirmUsername && confirmTableType !== null) {
+            userlogout(confirmUsername, confirmTableType); // Pass both values to the deletion function
+        }
         setdelpopbox(false);
         setconfirmdel(null);
     };
@@ -84,14 +88,14 @@ const Table_dashboard = () => {
         setconfirmdel(null);
     };
 
-    const userlogout = async (username, table_type) => {
-
-        // let tableTypeValue = table_type === 'AC' ? 1 : 0;
+    const userlogout = async (user, table_type) => {
+        setauseraddloading(true)
+        // let tableTypeValue = table_type === '0' ? 0 : 1;
 
         const formData = new FormData();
-        formData.append('username', user);
+        formData.append('username', username);
         formData.append('token', token);
-        formData.append('table_size', username);
+        formData.append('table_size', user);
         formData.append('table_type', table_type)
         try {
             const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=remove', {
@@ -104,9 +108,13 @@ const Table_dashboard = () => {
             }
             const data = await response.json();
             console.log('User removed successfully:', data);
+            window.location.reload();
         } catch (error) {
             console.error('Error removing user:', error);
             alert('Error: ' + error.message);
+        }
+        finally{
+            setauseraddloading(true)
         }
 
     };
@@ -118,10 +126,11 @@ const Table_dashboard = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setauseraddloading(true);
         setOpenModal(false);
         let tableTypeValue = tabletype === '0' ? 0 : 1;
         const formData = new FormData();
-        formData.append('username', user);
+        formData.append('username', username);
         formData.append('token', token);
         formData.append('table_size', tablesize);
         formData.append('table_type', tableTypeValue);
@@ -143,6 +152,7 @@ const Table_dashboard = () => {
 
             if (data.Status === true) {
                 setOpenModal(false);
+                window.location.reload();
             }
             console.log(data);
             setTableSize('');
@@ -152,24 +162,28 @@ const Table_dashboard = () => {
             console.error('Error submitting data:', error);
             alert('Error: ' + error.message);
         }
+        finally{
+            setauseraddloading(false)
+        }
     };
 
-   // Pagination logic
-   const indexOfLastTable = currentPage * tablesPerPage;
-   const indexOfFirstTable = indexOfLastTable - tablesPerPage;
-   const currentAcTables = actable.slice(indexOfFirstTable, indexOfLastTable);
-   const currentNonAcTables = nonactable.slice(indexOfFirstTable, indexOfLastTable);
+    // Pagination logic
+    const indexOfLastTable = currentPage * tablesPerPage;
+    const indexOfFirstTable = indexOfLastTable - tablesPerPage;
+    const currentAcTables = actable.slice(indexOfFirstTable, indexOfLastTable);
+    const currentNonAcTables = nonactable.slice(indexOfFirstTable, indexOfLastTable);
 
-   const pageNumbers = [];
-   const totalTables = [...actable, ...nonactable];
-   for (let i = 1; i <= Math.ceil(totalTables.length / tablesPerPage); i++) {
-       pageNumbers.push(i);
-   }
+    const pageNumbers = [];
+    const totalTables = [...actable, ...nonactable];
+    for (let i = 1; i <= Math.ceil(totalTables.length / tablesPerPage); i++) {
+        pageNumbers.push(i);
+    }
 
-   // Function to handle pagination
-   const paginate = (pageNumber) => {
-       setCurrentPage(pageNumber);
-   };
+    // Function to handle pagination
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     setTimeout(() => {
         setopenaddedpop(false)
     }, 4000);
@@ -201,6 +215,18 @@ const Table_dashboard = () => {
                             </div>
                         </div>
                     )}
+
+                    {
+                        useraddloading && (
+                            <>
+                                <div className="loader-overlay delpopup">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    }
 
                     {openModal && (
                         <div className="user-details-card text-center" style={{ backgroundColor: modalbg, color: textcolor }}>
@@ -319,7 +345,7 @@ const Table_dashboard = () => {
                         {/* Pagination Controls */}
                         <div className="pagination">
                             <button
-                            className='btn btn-info'
+                                className='btn btn-info'
                                 onClick={() => paginate(currentPage - 1)}
                                 disabled={currentPage === 1}
                                 style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
@@ -337,12 +363,12 @@ const Table_dashboard = () => {
                                     {number}
                                 </button>
                             ))} */}
-                            <span style={{margin:'8px'}}>{currentPage}</span>
+                            <span style={{ margin: '8px' }}>{currentPage}</span>
 
                             <button
-                             className='btn btn-info'
+                                className='btn btn-info'
                                 onClick={() => paginate(currentPage + 1)}
-                                disabled={currentPage === pageNumbers.length}
+                                disabled={currentPage === pageNumbers.length - 1}
                                 style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === pageNumbers.length ? 'not-allowed' : 'pointer' }}
                             >
                                 Next

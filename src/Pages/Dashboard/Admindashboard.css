@@ -94,13 +94,10 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-  width: 30%;
-  height: 400px;
-  width: 500px;
+  /* width: 30%; */
+  min-height: 400px; 
+  /* width: 500px;  */
   background-color: white;
-}
-.piechart {
-  margin-bottom: 60px;
 }
 /* Responsive adjustments */
 @media (max-width: 1200px) {
