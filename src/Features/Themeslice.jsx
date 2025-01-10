@@ -6,12 +6,14 @@ const initialState = storedTheme === 'white' ? {
   value: 'white',
   navbar: '#cef4f4',
   textcolor: 'black',
-  modal: 'whitesmoke'
+  modal: 'whitesmoke',
+  hover: 'white'
 } : {
-  value: '#041C32',
-  navbar: 'black',
+  value: '#092635',
+  navbar: '#1B4242',
   textcolor: 'white',
-  modal: '#495057'
+  modal: '#123030',
+  hover:'#1e4a4a'
 };
 
 export const ThemeSlice = createSlice({
@@ -23,13 +25,15 @@ export const ThemeSlice = createSlice({
       state.navbar = '#cef4f4';
       state.textcolor = 'black';
       state.modal = 'whitesmoke';
+      state.hover = 'white'
       localStorage.setItem('theme', 'white'); // Store in localStorage
     },
     dark: (state) => {
-      state.value = '#0E1027';
-      state.navbar = 'black';
+      state.value = '#092635';
+      state.navbar = '#1B4242';
       state.textcolor = 'white';
-      state.modal = '#495057';
+      state.modal = '#123030';
+      state.hover = '#1e4a4a'
       localStorage.setItem('theme', 'dark'); // Store in localStorage
     },
   },

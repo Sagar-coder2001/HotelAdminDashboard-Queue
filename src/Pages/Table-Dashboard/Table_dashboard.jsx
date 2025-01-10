@@ -5,6 +5,7 @@ import Admindashboard from '../Dashboard/Admindashboard';
 import { useLocation } from 'react-router-dom';
 import '../../Pages/Table-Dashboard/Table_dashboard.css';
 import { useSelector } from 'react-redux';
+import DataTable from 'react-data-table-component';
 
 const Table_dashboard = () => {
     const location = useLocation();
@@ -19,13 +20,9 @@ const Table_dashboard = () => {
     const [delpopbox, setdelpopbox] = useState(false);
     const [confirmUsername, setConfirmUsername] = useState(null); // Separate state for username
     const [confirmTableType, setConfirmTableType] = useState(null);
-    const [useraddloading , setauseraddloading] = useState(false)
+    const [useraddloading, setauseraddloading] = useState(false)
 
     const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
-
-    // Pagination States
-    const [currentPage, setCurrentPage] = useState(1);
-    const [tablesPerPage] = useState(3);
 
     const bgcolor = useSelector((state) => state.theme.navbar);
     const textcolor = useSelector((state) => state.theme.textcolor);
@@ -44,7 +41,7 @@ const Table_dashboard = () => {
             formData.append('token', token);
 
             try {
-                const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=get', {
+                const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=get', {
                     method: 'POST',
                     body: formData,
                 });
@@ -98,7 +95,7 @@ const Table_dashboard = () => {
         formData.append('table_size', user);
         formData.append('table_type', table_type)
         try {
-            const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=remove', {
+            const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=remove', {
                 method: 'POST',
                 body: formData,
             });
@@ -113,7 +110,7 @@ const Table_dashboard = () => {
             console.error('Error removing user:', error);
             alert('Error: ' + error.message);
         }
-        finally{
+        finally {
             setauseraddloading(true)
         }
 
@@ -135,7 +132,7 @@ const Table_dashboard = () => {
         formData.append('table_size', tablesize);
         formData.append('table_type', tableTypeValue);
         try {
-            const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=add', {
+            const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=add', {
                 method: 'POST',
                 body: formData,
             });
@@ -162,37 +159,60 @@ const Table_dashboard = () => {
             console.error('Error submitting data:', error);
             alert('Error: ' + error.message);
         }
-        finally{
+        finally {
             setauseraddloading(false)
         }
     };
 
-    // Pagination logic
-    const indexOfLastTable = currentPage * tablesPerPage;
-    const indexOfFirstTable = indexOfLastTable - tablesPerPage;
-    const currentAcTables = actable.slice(indexOfFirstTable, indexOfLastTable);
-    const currentNonAcTables = nonactable.slice(indexOfFirstTable, indexOfLastTable);
 
-    const pageNumbers = [];
-    const totalTables = [...actable, ...nonactable];
-    for (let i = 1; i <= Math.ceil(totalTables.length / tablesPerPage); i++) {
-        pageNumbers.push(i);
-    }
 
-    // Function to handle pagination
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+
 
     setTimeout(() => {
         setopenaddedpop(false)
     }, 4000);
 
+
+    const columns = [
+        {
+            name: 'Sr. No',
+            selector: (row, index) => index + 1,  // Dynamically display serial number
+            sortable: true,
+        },
+        {
+            name: 'Table Size',
+            selector: (row) => row.table_size,
+            sortable: true,
+        },
+        {
+            name: 'Type',
+            selector: (row) => row.type === 1 ? 'AC' : 'NON-AC',
+            sortable: true,
+        },
+        {
+            name: 'Action',
+            cell: (row) => (
+                <button
+                    onClick={() => userlogoutpopbox(row.table_size, row.type)}
+                    style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '11px 10px', cursor: 'pointer' }}
+                >
+                    Delete
+                </button>
+            ),
+        },
+    ];
+
+    const data = [
+        ...actable.map((item) => ({ table_size: item, type: 1 })),
+        ...nonactable.map((item) => ({ table_size: item, type: 0 })),
+    ];
+
+
     return (
         <Layout>
             <Admindashboard />
-            <div className='mt-5 dashboard-container'>
-                <div className="employee-table">
+            <div className='dashboard-container'>
+                <div className="employee-table" style={{ marginTop: '50px' }} >
                     <div className="addbtn">
                         <button className='mt-4' onClick={addTableUser}>Add Table</button>
                     </div>
@@ -268,112 +288,27 @@ const Table_dashboard = () => {
                                 </div>
                                 <hr />
                                 <div className="input-group row mb-3">
-                                    <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 5px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
+                                    <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 11px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
                                 </div>
                             </form>
                         </div>
                     )}
-
-                    <div className="table-container">
+                    <div className="employee-table" style={{backgroundColor: modalbg, color: textcolor, width:'100%', height:'auto', marginTop:'20px', borderRadius:'6px'}}>
+                    <div className="table-container" style={{padding:'10px 0px'}} >
                         <h4>Table Management</h4>
-                        <table className="custom-table">
-                            <thead>
-                                <tr style={{ backgroundColor: bgcolor, color: textcolor }}>
-                                    <th style={{ padding: '10px' }}>Sr. No</th>
-                                    <th>Table Size</th>
-                                    <th>AC / NON-AC</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentAcTables.length || currentNonAcTables.length ? (
-                                    <>
-                                        {/* Render AC tables */}
-                                        {currentAcTables.map((emp, index) => (
-                                            <tr key={index} style={{ cursor: 'pointer', position: 'relative' }}>
-                                                <td>
-                                                    <span>
-                                                        {index + 1 + (currentPage - 1) * tablesPerPage}
-                                                    </span>
-                                                </td>
-                                                <td>{emp}</td>
-                                                <td>AC</td>
-                                                <td>
-                                                    <span
-                                                        className="data-bs-toggle"
-                                                        data-bs-target="#exampleModal"
-                                                        onClick={() => userlogoutpopbox(emp, '1')}
-                                                    >
-                                                        <i className="fa-solid fa-trash text-danger"></i>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
-
-                                        {/* Render NON-AC tables */}
-                                        {currentNonAcTables.map((emp, index) => (
-                                            <tr key={index} style={{ cursor: 'pointer', position: 'relative' }}>
-                                                <td>
-                                                    <span>
-                                                        {index + 1 + (currentPage - 1) * tablesPerPage}
-                                                    </span>
-                                                </td>
-                                                <td>{emp}</td>
-                                                <td>NON-AC</td>
-                                                <td>
-                                                    <span
-                                                        className="data-bs-toggle"
-                                                        data-bs-target="#exampleModal"
-                                                        onClick={() => userlogoutpopbox(emp, '0')}
-                                                    >
-                                                        <i className="fa-solid fa-trash text-danger"></i>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </>
-                                ) : (
-                                    <tr>
-                                        <td colSpan="4" style={{ textAlign: 'center' }}>
-                                            No table data found
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-
-                        {/* Pagination Controls */}
-                        <div className="pagination">
-                            <button
-                                className='btn btn-info'
-                                onClick={() => paginate(currentPage - 1)}
-                                disabled={currentPage === 1}
-                                style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
-                            >
-                                Prev
-                            </button>
-
-                            {/* {pageNumbers.map((number) => (
-                                <button
-                                    key={number}
-                                    onClick={() => paginate(number)}
-                                    className={currentPage === number ? 'active' : ''}
-                                    style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px' }}
-                                >
-                                    {number}
-                                </button>
-                            ))} */}
-                            <span style={{ margin: '8px' }}>{currentPage}</span>
-
-                            <button
-                                className='btn btn-info'
-                                onClick={() => paginate(currentPage + 1)}
-                                disabled={currentPage === pageNumbers.length - 1}
-                                style={{ padding: '5px 8px', border: 'none', borderRadius: '2px', margin: '0px 3px', cursor: currentPage === pageNumbers.length ? 'not-allowed' : 'pointer' }}
-                            >
-                                Next
-                            </button>
-                        </div>
+                        <DataTable
+                            columns={columns}
+                            data={data}
+                            pagination
+                            paginationPerPage={11} 
+                            striped
+                            responsive
+                            highlightOnHover
+                            paginationComponentOptions={{
+                                noRowsPerPage: true
+                            }}
+                        />
+                    </div>
                     </div>
                 </div>
             </div>

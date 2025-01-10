@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isLoggedIn: localStorage.getItem('isLoggedIn') ? true : false,
   token: localStorage.getItem('token') || null,  // Track the token
-  username: localStorage.getItem('username') || null,  // Track the username
-  password: localStorage.getItem('password') || null,
+  username: localStorage.getItem('username') || null, 
+  password: '',
 };
 
 export const Userslice = createSlice({
@@ -17,12 +17,11 @@ export const Userslice = createSlice({
       state.username = action.payload.username;  // Set username from action payload
       state.password = action.payload.password;  // Set username from action payload
 
-
       // Save to localStorage
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('token', action.payload.token);
       localStorage.setItem('username', action.payload.username);
-      localStorage.setItem('password', action.payload.password);
+      // localStorage.setItem('password', action.payload.password);
 
     },
     logout: (state) => {

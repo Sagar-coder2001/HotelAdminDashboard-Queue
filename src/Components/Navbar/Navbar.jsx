@@ -10,13 +10,15 @@ const Navbar = () => {
 
     const navigate = useNavigate();
 
-    const bgcolor = useSelector((state) => state.theme.navbar);
+    const bgcolor = useSelector((state) => state.theme.value);
+    const navcolor = useSelector((state) => state.theme.navbar);
+
     const textcolor = useSelector((state) => state.theme.textcolor);
 
     const dispatch = useDispatch()
 
     const toggleTheme = () => {
-        if (bgcolor == 'black') {
+        if (bgcolor == '#092635') {
             dispatch(white());
             localStorage.removeItem('theme');
             setChangeicon(false)
@@ -29,7 +31,7 @@ const Navbar = () => {
     return (
         <div>
             <header>
-                <div className='navbar' style={{ backgroundColor: bgcolor, color: textcolor }}>
+                <div className='navbar' style={{ backgroundColor: navcolor, color: textcolor }}>
                     <div className="leftnavbar">
                         <a href="" className='ml-4'>Banana-Leaf</a>
                     </div>

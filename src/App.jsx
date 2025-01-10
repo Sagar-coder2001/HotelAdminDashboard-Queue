@@ -7,6 +7,7 @@ import Hotel_dashboard from './Pages/Hotel-Dashboard/Hotel_dashboard'
 import Employee_dashboard from './Pages/Employee-dashboard/Employee_dashboard'
 import { useSelector } from 'react-redux'
 import UserProfile from './Pages/Userprofile/UserProfile'
+import Pagenotfound from './Pages/Pagenotfound/Pagenotfound'
 
 function App() {
 
@@ -27,7 +28,8 @@ function App() {
         <Route path = "/Hotel_dashboard" element ={<Hotel_dashboard/>}/>
         <Route path = "/Employee_dashboard" element ={<Employee_dashboard/>}/>
         <Route path = "/Userprofile" element ={<UserProfile/>}/>
-
+        <Route path = "*" element ={<Pagenotfound/>}/>
+        
       </Routes>
       </BrowserRouter>
 

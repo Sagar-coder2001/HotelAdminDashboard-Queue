@@ -8,13 +8,10 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement // Import ArcElement for pie chart
+  ArcElement 
 } from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2'; // Corrected Pie import
-
+import {  Bar, Pie } from 'react-chartjs-2'; 
 import { useNavigate } from 'react-router-dom';
-
-
 
 ChartJS.register(
   CategoryScale,
@@ -46,7 +43,7 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
       {
         label: 'Non-AC People',
         data: [],
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        backgroundColor: 'rgba(55, 99, 132, 0.5)',
       },
       {
         label: 'Total People',
@@ -59,32 +56,32 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
   const navigate = useNavigate();
 
   // const { tokenid, username } = location.state || {}; 
-
   // const [token, setToken] = useState(tokenid || ''); 
   // const [user, setUser] = useState(username || '');
+
 
   const [pieData, setPieData] = useState({
     labels: ['AC People', 'Non-AC People', 'Total People'],
     datasets: [{
-      data: [],
+      data: [
+      ],
       backgroundColor: [
         'rgba(75, 192, 192, 0.5)',
-        'rgba(255, 99, 132, 0.5)',
+        'rgba(55, 99, 132, 0.5)',
         'rgba(54, 162, 235, 0.5)',
       ],
     }],
   });
 
+
   const getLastThreeDates = () => {
     const dates = [];
     const today = new Date();
-
     for (let i = 0; i < 3; i++) {
       const date = new Date();
       date.setDate(today.getDate() - i);
       dates.push(date.toISOString().split('T')[0]); // Format YYYY-MM-DD
     }
-
     return dates.reverse(); // Return in chronological order
   };
 
@@ -99,7 +96,7 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
         formdata.append('token', token);
         formdata.append('username', username);
 
-        const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/dashboard.php', {
+        const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/dashboard.php', {
           method: 'POST',
           body: formdata,
         });
@@ -132,7 +129,7 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
             {
               label: 'Non-AC People',
               data: nonAcCounts,
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              backgroundColor: 'rgba(55, 99, 132, 0.5)',
             },
             {
               label: 'Total People',
@@ -166,7 +163,7 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
       <Layout>
     <Admindashboard/>
     <div className="dashboard-container">
-      <div className="upper-dashboard">
+      <div className="upper-dashboard mt-5">
         <strong style={{ fontSize: '25px' }}>Welcome!</strong>
         <h3 style={{ textAlign: 'center' }}>Hotel Admin Dashboard</h3>
         <div className="upper">

@@ -57,11 +57,12 @@ const LoginForm = () => {
 
   const submitDetails = async (e) => {
     e.preventDefault();
+    navigate('/Hotel_dashboard');
     try {
       const formdata = new FormData();
       formdata.append('username', userdetails.username);
       formdata.append('password', userdetails.password);
-      const response = await fetch(`http://192.168.1.25/Queue/login.php?do=login&hotel_id=${filepath}`, {
+      const response = await fetch(`http://192.168.1.11/Queue/login.php?do=login&hotel_id=${filepath}`, {
         method: 'POST',
         body: formdata,
       });

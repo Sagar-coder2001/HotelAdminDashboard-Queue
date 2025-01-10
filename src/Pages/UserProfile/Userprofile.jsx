@@ -5,14 +5,28 @@ import { useDispatch, useSelector } from 'react-redux';
 const UserProfile = () => {
     const { isLoggedIn, token, username, password } = useSelector((state) => state.loggedin);
 
-    const [confirmpass, setconfirmpass] = useState();
+    const [userprofile, setUserProfile] = useState({
+        username : username,
+        password : '',
+        newpassword :'',
+        confirmnewpass : '',
+    });
+
+    const handlechange = (e) => {
+        setUserProfile((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }))
+    }
 
     const submitDetails = async (e) => {
+        console.log(userprofile);
+
         e.preventDefault();
         try {
             const formdata = new FormData();
-            formdata.append('username', userdetails.username);
-            formdata.append('password', userdetails.password);
+            formdata.append('username', userprofile.username);
+            formdata.append('password', userprofile.password);
             formdata.append('confirmpass', confirmpass)
             const response = await fetch(`http://192.168.1.25/Queue/login.php?do=login&hotel_id=${filepath}`, {
                 method: 'POST',
@@ -62,7 +76,6 @@ const UserProfile = () => {
                                     </div>
                                 </>
                             ) : ''} */}
-
                         <form>
                             <h4 className="text-center fs-2">Update Profile</h4>
                             <div className="mb-3">
@@ -71,7 +84,7 @@ const UserProfile = () => {
                                     type="email"
                                     className="form-control"
                                     value={username}
-                                    // onChange={onchangetext}
+                                    onChange={handlechange}
                                     id="username"
                                     name="username"
                                 />
@@ -81,23 +94,34 @@ const UserProfile = () => {
                                 <input
                                     type="password"
                                     className="form-control"
-                                    value={password}
-                                    // onChange={onchangetext}
+                                    value={userprofile.password}
+                                    onChange={handlechange}
                                     name="password"
                                     id="password"
                                 />
                                 <i class="fa-solid fa-eye" style={{position: 'absolute', top:'40px', right:'10px'}} onClick={() => {togglePass('password')}}></i>
-
                             </div>
                             <div className="mb-3" style={{position:'relative'}}>
-                                <label htmlFor="password" className="form-label">Reset Password</label>
+                                <label htmlFor="password" className="form-label">New Password</label>
                                 <input
                                     type="password"
                                     className="form-control"
-                                    value={confirmpass}
-                                    onChange={(e) => setconfirmpass(e.target.value)}
-                                    name="confirmpass"
-                                    id="confirmpass"
+                                    value={userprofile.newpassword}
+                                    onChange={handlechange}
+                                    name="newpassword"
+                                    id="newpassword"
+                                />
+                                <i class="fa-solid fa-eye" style={{position: 'absolute', top:'40px', right:'10px'}} onClick={() => {toggleconfPass('confirmpass')}}></i>
+                            </div>
+                            <div className="mb-3" style={{position:'relative'}}>
+                                <label htmlFor="password" className="form-label">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    value={userprofile.confirmnewpass}
+                                    onChange={handlechange}
+                                    name="confirmnewpass"
+                                    id="confirmnewpass"
                                 />
                                 <i class="fa-solid fa-eye" style={{position: 'absolute', top:'40px', right:'10px'}} onClick={() => {toggleconfPass('confirmpass')}}></i>
                             </div>

@@ -12,7 +12,7 @@
 }
 
 .dashboard-container{
-    margin-bottom: 70px;
+    margin-bottom: 20px;
 }
 
 .popup-content {
@@ -51,16 +51,15 @@
     transform: translate(-50%, -50%);
     z-index: 2000;
 }
-
-
-.user-details-card .light {
-    background-color: #ffffff;
-    color: white;
-    /* Text color for dark theme */
+.user-details-card{
+    backdrop-filter: blur(10px);
 }
 
-.user-details-card.dark {
-    background-color: #000000;
-
-    color: white;
+.srno{
+    text-align: center;
+    font-size: 16px;
+}
+.heading{
+    font-size: 16px;
+    font-weight: bold;
 }
