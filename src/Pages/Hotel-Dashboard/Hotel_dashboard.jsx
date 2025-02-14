@@ -96,7 +96,7 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
         formdata.append('token', token);
         formdata.append('username', username);
 
-        const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/dashboard.php', {
+        const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/dashboard.php', {
           method: 'POST',
           body: formdata,
         });

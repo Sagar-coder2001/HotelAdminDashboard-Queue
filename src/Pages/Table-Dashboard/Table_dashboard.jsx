@@ -41,7 +41,7 @@ const Table_dashboard = () => {
             formData.append('token', token);
 
             try {
-                const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=get', {
+                const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=get', {
                     method: 'POST',
                     body: formData,
                 });
@@ -95,7 +95,7 @@ const Table_dashboard = () => {
         formData.append('table_size', user);
         formData.append('table_type', table_type)
         try {
-            const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=remove', {
+            const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=remove', {
                 method: 'POST',
                 body: formData,
             });
@@ -132,7 +132,7 @@ const Table_dashboard = () => {
         formData.append('table_size', tablesize);
         formData.append('table_type', tableTypeValue);
         try {
-            const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/table.php?for=add', {
+            const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/table.php?for=add', {
                 method: 'POST',
                 body: formData,
             });
@@ -175,29 +175,30 @@ const Table_dashboard = () => {
 
     const columns = [
         {
-            name: 'Sr. No',
-            selector: (row, index) => index + 1,  // Dynamically display serial number
+            name: <div className='heading'>Sr. No</div>,
+            selector: (row, index) => <><div className='srno'>{index + 1}</div></>,  // Dynamically display serial number
             sortable: true,
         },
         {
-            name: 'Table Size',
-            selector: (row) => row.table_size,
+            name: <div className='heading'>Table Size</div>,
+            selector: (row) =>  <><div className='srno'>{row.table_size}</div></>,
             sortable: true,
         },
         {
-            name: 'Type',
-            selector: (row) => row.type === 1 ? 'AC' : 'NON-AC',
+            name: <div className='heading'>Table Type</div>,
+            selector: (row) =>  <><div className='srno'>{row.type === 1 ? 'AC' : 'NON-AC'}</div></> ,
             sortable: true,
         },
         {
-            name: 'Action',
+            name: <div className='heading'>Action</div>,
             cell: (row) => (
-                <button
+                <span
                     onClick={() => userlogoutpopbox(row.table_size, row.type)}
-                    style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '11px 10px', cursor: 'pointer' }}
+                    style={{ cursor: 'pointer' }}
+                    className='srno'
                 >
-                    Delete
-                </button>
+                   <i className="fa-solid fa-trash text-danger srno"></i>
+                </span>
             ),
         },
     ];
@@ -288,19 +289,20 @@ const Table_dashboard = () => {
                                 </div>
                                 <hr />
                                 <div className="input-group row mb-3">
-                                    <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 11px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
+                                    <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 25px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
                                 </div>
                             </form>
                         </div>
                     )}
                     <div className="employee-table" style={{backgroundColor: modalbg, color: textcolor, width:'100%', height:'auto', marginTop:'20px', borderRadius:'6px'}}>
-                    <div className="table-container" style={{padding:'10px 0px'}} >
-                        <h4>Table Management</h4>
+                    <div className="table-container" style={{padding:'20px 0px'}} >
+                    
                         <DataTable
+                         title={<span style={{fontSize: '24px', fontWeight: 'bold' }}>Table Managment </span>}
                             columns={columns}
                             data={data}
                             pagination
-                            paginationPerPage={11} 
+                            paginationPerPage={10} 
                             striped
                             responsive
                             highlightOnHover

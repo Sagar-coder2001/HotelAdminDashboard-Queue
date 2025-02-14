@@ -14,38 +14,6 @@ const Employee_dashboard = () => {
   const [password, setPassword] = useState('');
   const [userExist, setUserExist] = useState(false);
   const [allUserdata, setAllUserdata] = useState([
-      {
-        "username": "pranav",
-        "role": "emp"
-      },
-      {
-        "username": "doe",
-        "role": "emp"
-      },
-      {
-        "username": "hello",
-        "role": "emp"
-      },
-      {
-        "username": "world",
-        "role": "emp"
-      },
-      {
-        "username": "john",
-        "role": "emp"
-      },
-      {
-        "username": "nseem",
-        "role": "emp"
-      },
-      {
-        "username": "shafique",
-        "role": "emp"
-      },
-      {
-        "username": "john",
-        "role": "emp"
-      }
   ]);
   const [selectedRole, setSelectedRole] = useState('emp');
   const [delpopbox, setdelpopbox] = useState(false);
@@ -70,7 +38,7 @@ const Employee_dashboard = () => {
     formData.append('password', password);
     formData.append('role', selectedRole);
     try {
-      const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/user.php?for=add', {
+      const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=add', {
         method: 'POST',
         body: formData,
       });
@@ -112,7 +80,7 @@ const Employee_dashboard = () => {
       formData.append('token', token);
 
       try {
-        const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/user.php?for=get', {
+        const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=get', {
           method: 'POST',
           body: formData,
         });
@@ -165,7 +133,7 @@ const Employee_dashboard = () => {
     formData.append('delete_user', delete_user);
 
     try {
-      const response = await fetch('http://192.168.1.11/Queue/Hotel_Admin/user.php?for=remove', {
+      const response = await fetch('http://192.168.1.25/Queue/Hotel_Admin/user.php?for=remove', {
         method: 'POST',
         body: formData,
       });
@@ -194,53 +162,20 @@ const Employee_dashboard = () => {
   };
 
 
-  // const columns = [
-  //   {
-  //     name: <><div className='heading'>Sr. No</div></>,
-  //     selector: (row, index) => <><div className='srno'>{index + 1}</div></>,
-  //     sortable: true,
-  //   },
-  //   {
-  //     name: <><div className='heading'>Username</div></>,
-  //     selector: row => <><div className='srno'>{row.Username}</div></>,
-  //     sortable: true,
-  //   },
-  //   {
-  //     name: <><div className='heading'>Role</div></>,
-  //     selector: row => <><div className='srno'>{row.Role}</div></>,
-  //     sortable: true,
-  //   },
-  //   {
-  //     name: <><div className='heading'>Action</div></>,
-  //     cell: row => (
-  //       <span
-  //         className="data-bs-toggle"
-  //         data-bs-target="#exampleModal"
-  //         onClick={() => userlogoutpopbox(row.Username)}
-  //       >
-  //         <i className="fa-solid fa-trash text-danger srno"></i>
-  //       </span>
-  //     ),
-  //   }
-  // ];
-
-
   const columns = [
     {
       name: <><div className='heading'>Sr. No</div></>,
-      selector: () => <><div className='srno'>1</div></>,
+      selector: (row, index) => <><div className='srno'>{index + 1}</div></>,
       sortable: true,
     },
     {
       name: <><div className='heading'>Username</div></>,
-      selector: row => <><div className='srno'>pranav</div></>,
-
+      selector: row => <><div className='srno'>{row.Username}</div></>,
       sortable: true,
     },
     {
       name: <><div className='heading'>Role</div></>,
-      selector: row => <><div className='srno'>emp</div></>,
-
+      selector: row => <><div className='srno'>{row.Role}</div></>,
       sortable: true,
     },
     {
@@ -249,12 +184,45 @@ const Employee_dashboard = () => {
         <span
           className="data-bs-toggle"
           data-bs-target="#exampleModal"
+          onClick={() => userlogoutpopbox(row.Username)}
         >
           <i className="fa-solid fa-trash text-danger srno"></i>
         </span>
       ),
     }
   ];
+
+
+  // const columns = [
+  //   {
+  //     name: <><div className='heading'>Sr. No</div></>,
+  //     selector: () => <><div className='srno'>1</div></>,
+  //     sortable: true,
+  //   },
+  //   {
+  //     name: <><div className='heading'>Username</div></>,
+  //     selector: row => <><div className='srno'>pranav</div></>,
+
+  //     sortable: true,
+  //   },
+  //   {
+  //     name: <><div className='heading'>Role</div></>,
+  //     selector: row => <><div className='srno'>emp</div></>,
+
+  //     sortable: true,
+  //   },
+  //   {
+  //     name: <><div className='heading'>Action</div></>,
+  //     cell: row => (
+  //       <span
+  //         className="data-bs-toggle"
+  //         data-bs-target="#exampleModal"
+  //       >
+  //         <i className="fa-solid fa-trash text-danger srno"></i>
+  //       </span>
+  //     ),
+  //   }
+  // ];
 
   return (
     <Layout>
@@ -314,7 +282,7 @@ const Employee_dashboard = () => {
                 </div>
                 <hr />
                 <div className="input-group row mb-3">
-                  <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 11px', borderRadius: '4px' }} onClick={handleSubmit}>Submit</span>
+                  <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 25px', borderRadius: '4px' }} onClick={handleSubmit}>Submit</span>
                 </div>
               </form>
             </div>
@@ -368,9 +336,9 @@ const Employee_dashboard = () => {
           )}
 
           <div className="employee-table" style={{backgroundColor: modalbg, color: color, width:'100%', height:'auto', marginTop:'20px', borderRadius:'6px'}}>
-            <div className="table-container" style={{padding:'15px 0px'}} >
+            <div className="table-container" style={{padding:'20px 0px'}} >
               <DataTable
-                title = 'Table Managment' 
+               title={<span style={{fontSize: '24px', fontWeight: 'bold' }}>Employee Managment</span>}
                 columns={columns}
                 data={allUserdata}
                 pagination
