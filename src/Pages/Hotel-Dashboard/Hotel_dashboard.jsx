@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import {  Bar, Pie } from 'react-chartjs-2'; 
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 ChartJS.register(
   CategoryScale,
@@ -162,18 +163,35 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
   return (
       <Layout>
     <Admindashboard/>
+
     <div className="dashboard-container">
       <div className="upper-dashboard mt-5">
         <strong style={{ fontSize: '25px' }}>Welcome!</strong>
         <h3 style={{ textAlign: 'center' }}>Hotel Admin Dashboard</h3>
         <div className="upper">
-          <div className="col4">Daily Game Visit <br /> $200</div>
-          <div className="col4">Revenue<br /> $200</div>
-          <div className="col4">Orders<br /> $200</div>
+          <motion.div
+             initial={{ opacity: 0 , y: -10 }} 
+             animate={{ opacity: 1, y: 0}} 
+             transition={{ duration: 1 }}
+          className="col4">Daily Game Visit <br /> $200</motion.div>
+          <motion.div
+              initial={{ opacity: 0 , y: -10 }} 
+              animate={{ opacity: 1, y: 0}} 
+              transition={{ duration: 1 }}
+          className="col4">Revenue<br /> $200</motion.div>
+          <motion.div
+              initial={{ opacity: 0 , y: -10 }} 
+              animate={{ opacity: 1, y: 0}} 
+              transition={{ duration: 1 }}
+          className="col4">Orders<br /> $200</motion.div>
         </div>
       </div>
       <div className="lower">
-        <div className="col6">
+        <motion.div
+        initial={{ opacity: 0 , x: -100 }} 
+        animate={{ opacity: 1, x: 0}} 
+        transition={{ duration: 1 }}
+        className="col6">
           <Bar
             data={barData}
             style={{ width: '100%', height: '100%' }}
@@ -190,8 +208,12 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
               },
             }}
           />
-        </div>
-        <div className="col6 piechart">
+        </motion.div>
+        <motion.div
+           initial={{ opacity: 0 , x: 100 }} 
+           animate={{ opacity: 1, x: 0}} 
+           transition={{ duration: 1 }}
+        className="col6 piechart">
           <Pie
             data={pieData}
             width={100}
@@ -212,10 +234,11 @@ const { isLoggedIn, token, username } = useSelector((state) => state.loggedin);
               },
             }}
           />
-        </div>
+        </motion.div>
       </div>
     </div>
     </Layout>
+
   );
 };
 

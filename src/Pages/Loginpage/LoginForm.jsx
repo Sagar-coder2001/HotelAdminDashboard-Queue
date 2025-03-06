@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../Components/Layout/Layout';
 import { userlogin ,logout } from '../../Features/Userslice';
+import { motion } from 'framer-motion';
 
 const LoginForm = () => {
   const [userdetails, setUserDetails] = useState({
@@ -102,10 +103,14 @@ const LoginForm = () => {
     <div>
       <Layout>
         {/* Apply dynamic class for background color based on the theme */}
-        <div className={`login-container ${isDarkTheme ? 'dark' : 'light'}`}>
+        <motion.div 
+        initial={{ opacity: 0 , x: -10 }} 
+        animate={{ opacity: 1, x: 0 }} 
+        transition={{ duration: 1 }}
+        className={`login-container ${isDarkTheme ? 'dark' : 'light'}`}>
 
           <div className="card-container">
-            {
+            {/* {
               showerr ? (
                 <>
                   <div className="showerr">
@@ -115,7 +120,7 @@ const LoginForm = () => {
                     <button onClick={() => setshowerr(false)}>ok</button>
                   </div>
                 </>
-              ) : ''}
+              ) : ''} */}
 
                     <form>
                       <h4 className="text-center fs-2">Hotel Login</h4>
@@ -129,6 +134,7 @@ const LoginForm = () => {
                           id="username"
                           name="username"
                         />
+                        <span className='text-danger'>{showerr ? 'Invalid Username * ' : ''}</span>
                       </div>
                       <div className="mb-3" style={{position:'relative'}}>
                         <label htmlFor="password" className="form-label">Password</label>
@@ -141,7 +147,7 @@ const LoginForm = () => {
                           id="password"
                         />
                         <i class="fa-solid fa-eye" style={{position: 'absolute', top:'40px', right:'10px'}} onClick={() => {togglePass('password')}}></i>
-
+                        <span className='text-danger'>{showerr ? 'Invalid Password* ' : ''}</span>
                       </div>
                       <div className="mb-3 form-check">
                         <input type="checkbox" className="form-check-input" id="exampleCheck1" />
@@ -156,7 +162,7 @@ const LoginForm = () => {
                       </button>
                     </form>
           </div>
-        </div>
+        </motion.div>
       </Layout>
     </div>
   );

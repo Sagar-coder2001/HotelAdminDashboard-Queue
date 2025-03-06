@@ -47,6 +47,9 @@ const Admindashboard = () => {
   const openemployeedashboard = () => {
     navigate('/Employee_dashboard');
   }
+  const opensetting = () => {
+    navigate('/Setting')
+  }
 
   return (
     <Layout>
@@ -73,7 +76,7 @@ const Admindashboard = () => {
               <li><a onClick={(e) => { openemployeedashboard(e) }} style={{ backgroundColor: hover }}>Employee Manage</a></li>
               <li><a onClick={(e) => { opentable(e) }} style={{ backgroundColor: hover }}>Table Managment</a></li>
               <div style={{ marginTop: '150px' }}>
-                <li><a style={{ backgroundColor: hover }}>Setting</a></li>
+                <li><a style={{ backgroundColor: hover }} onClick={(e) => { opensetting(e) }}>Setting</a></li>
                 <li><a onClick={handlelogout} style={{ backgroundColor: hover }} >Logout</a></li>
               </div>
             </ul>

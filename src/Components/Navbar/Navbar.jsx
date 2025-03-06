@@ -38,7 +38,7 @@ const Navbar = () => {
                     <>
                         <div className="rightnavbar">
                             <i className="fa-solid fa-bell"></i>
-                            <i className="fa-solid fa-moon" onClick={toggleTheme} style={{ cursor: 'pointer' }}></i>
+                            <i className={`fa-solid ${bgcolor === '#092635' ? 'fa-sun' : 'fa-moon'}`} onClick={toggleTheme} style={{ cursor: 'pointer' }}></i>
                             <i className="fa-solid fa-user" style={{ cursor: 'pointer' }} onClick={() => navigate('/Userprofile', {
                             })}></i>
                         </div>

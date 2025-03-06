@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import '../../Pages/Table-Dashboard/Table_dashboard.css';
 import { useSelector } from 'react-redux';
 import DataTable from 'react-data-table-component';
+import { motion } from 'framer-motion';
 
 const Table_dashboard = () => {
     const location = useLocation();
@@ -168,9 +169,9 @@ const Table_dashboard = () => {
 
 
 
-    setTimeout(() => {
-        setopenaddedpop(false)
-    }, 4000);
+    // setTimeout(() => {
+    //     setopenaddedpop(false)
+    // }, 4000);
 
 
     const columns = [
@@ -181,12 +182,12 @@ const Table_dashboard = () => {
         },
         {
             name: <div className='heading'>Table Size</div>,
-            selector: (row) =>  <><div className='srno'>{row.table_size}</div></>,
+            selector: (row) => <><div className='srno'>{row.table_size}</div></>,
             sortable: true,
         },
         {
             name: <div className='heading'>Table Type</div>,
-            selector: (row) =>  <><div className='srno'>{row.type === 1 ? 'AC' : 'NON-AC'}</div></> ,
+            selector: (row) => <><div className='srno'>{row.type === 1 ? 'AC' : 'NON-AC'}</div></>,
             sortable: true,
         },
         {
@@ -197,7 +198,7 @@ const Table_dashboard = () => {
                     style={{ cursor: 'pointer' }}
                     className='srno'
                 >
-                   <i className="fa-solid fa-trash text-danger srno"></i>
+                    <i className="fa-solid fa-trash text-danger srno"></i>
                 </span>
             ),
         },
@@ -217,15 +218,22 @@ const Table_dashboard = () => {
                     <div className="addbtn">
                         <button className='mt-4' onClick={addTableUser}>Add Table</button>
                     </div>
+                    <div className='mt-3'>
+
                     {
                         openaddedpop && (
                             <>
-                                <div class="alert alert-primary mt-4" role="alert">
-                                    {showmsg}
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong>{showmsg}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true" onClick={() => setopenaddedpop(false)}>&times;</span>
+                                    </button>
                                 </div>
                             </>
                         )
                     }
+                    </div>
+
 
                     {delpopbox && (
                         <div className="delpopup">
@@ -250,7 +258,11 @@ const Table_dashboard = () => {
                     }
 
                     {openModal && (
-                        <div className="user-details-card text-center" style={{ backgroundColor: modalbg, color: textcolor }}>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1 }}
+                            className="user-details-card text-center" style={{ backgroundColor: modalbg, color: textcolor }}>
                             <form>
                                 <h3>
                                     Table Added
@@ -292,26 +304,30 @@ const Table_dashboard = () => {
                                     <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 25px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
                                 </div>
                             </form>
-                        </div>
+                        </motion.div>
                     )}
-                    <div className="employee-table" style={{backgroundColor: modalbg, color: textcolor, width:'100%', height:'auto', marginTop:'20px', borderRadius:'6px'}}>
-                    <div className="table-container" style={{padding:'20px 0px'}} >
-                    
-                        <DataTable
-                         title={<span style={{fontSize: '24px', fontWeight: 'bold' }}>Table Managment </span>}
-                            columns={columns}
-                            data={data}
-                            pagination
-                            paginationPerPage={10} 
-                            striped
-                            responsive
-                            highlightOnHover
-                            paginationComponentOptions={{
-                                noRowsPerPage: true
-                            }}
-                        />
-                    </div>
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1 }}
+                        className="employee-table" style={{ backgroundColor: modalbg, color: textcolor, width: '100%', height: 'auto', marginTop: '20px', borderRadius: '6px' }}>
+                        <div className="table-container" style={{ padding: '20px 0px' }} >
+
+                            <DataTable
+                                title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>Table Managment </span>}
+                                columns={columns}
+                                data={data}
+                                pagination
+                                paginationPerPage={10}
+                                striped
+                                responsive
+                                highlightOnHover
+                                paginationComponentOptions={{
+                                    noRowsPerPage: true
+                                }}
+                            />
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </Layout>

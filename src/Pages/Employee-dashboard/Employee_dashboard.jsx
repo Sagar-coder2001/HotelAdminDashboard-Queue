@@ -6,6 +6,7 @@ import Admindashboard from '../Dashboard/Admindashboard';
 import '../Employee-dashboard/Employeedashboard.css';
 import { useSelector } from 'react-redux';
 import DataTable from 'react-data-table-component';
+import { motion } from 'framer-motion';
 
 const Employee_dashboard = () => {
   const location = useLocation();
@@ -29,6 +30,9 @@ const Employee_dashboard = () => {
 
   // Handle user form submission
   const handleSubmit = async (e) => {
+    if (!newuser && !password) {
+      return false;
+    }
     setauseraddloading(true)
     e.preventDefault();
     const formData = new FormData();
@@ -74,6 +78,7 @@ const Employee_dashboard = () => {
 
   // Fetch user data
   useEffect(() => {
+
     const fetchData = async () => {
       const formData = new FormData();
       formData.append('username', username);
@@ -229,11 +234,34 @@ const Employee_dashboard = () => {
       <Admindashboard />
       <div className="dashboard-container" style={{ marginTop: '50px' }}>
         <div className="employee-manage">
+
+
+
           <div className="addbtn">
             <button className='mt-4' onClick={addEmpUser}>Add User</button>
+            <div className='mt-3'>
+              {
+                userExist && (
+                  <>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Error!</strong> Username already exists
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"onClick={() => setUserExist(false)}>&times;</span>
+                      </button>
+                    </div>
+                  </>
+                )
+              }
+            </div>
+
+
           </div>
           {openModal && (
-            <div className="user-details-card text-center" style={{ backgroundColor: modalbg, color: color }}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="user-details-card text-center" style={{ backgroundColor: modalbg, color: color }}>
               <form>
                 <h3>User Details</h3>
                 <button
@@ -256,7 +284,7 @@ const Employee_dashboard = () => {
                   <label htmlFor="username" className="col-4 col-form-label text-start">Username:</label>
                   <div className="col-8">
                     <input type="text" className="form-control" value={newuser}
-                      onChange={(e) => setNewuser(e.target.value)} />
+                      onChange={(e) => setNewuser(e.target.value)} required />
                   </div>
                 </div>
                 <div className="row mt-4">
@@ -282,10 +310,10 @@ const Employee_dashboard = () => {
                 </div>
                 <hr />
                 <div className="input-group row mb-3">
-                  <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 25px', borderRadius: '4px' }} onClick={handleSubmit}>Submit</span>
+                  <span className='queuefetchbtn col-4 m-auto' style={{ margin: '0px 25px', borderRadius: '4px', cursor: 'pointer' }} onClick={handleSubmit}>Submit</span>
                 </div>
               </form>
-            </div>
+            </motion.div>
           )}
 
           {delpopbox && (
@@ -310,7 +338,9 @@ const Employee_dashboard = () => {
             )
           }
 
-          {userExist && (
+
+
+          {/* {userExist && (
             <div className='user-details-card'>
               <div className="card" style={{ padding: '10px', marginTop: '20px' }}>
                 Username already exists
@@ -333,16 +363,20 @@ const Employee_dashboard = () => {
                 &#10006;
               </button>
             </div>
-          )}
+          )} */}
 
-          <div className="employee-table" style={{backgroundColor: modalbg, color: color, width:'100%', height:'auto', marginTop:'20px', borderRadius:'6px'}}>
-            <div className="table-container" style={{padding:'20px 0px'}} >
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="employee-table" style={{ backgroundColor: modalbg, color: color, width: '100%', height: 'auto', marginTop: '20px', borderRadius: '6px' }}>
+            <div className="table-container" style={{ padding: '20px 0px' }} >
               <DataTable
-               title={<span style={{fontSize: '24px', fontWeight: 'bold' }}>Employee Managment</span>}
+                title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>Employee Managment</span>}
                 columns={columns}
                 data={allUserdata}
                 pagination
-                paginationPerPage={15} 
+                paginationPerPage={15}
                 striped
                 responsive
                 highlightOnHover
@@ -351,7 +385,7 @@ const Employee_dashboard = () => {
                 }}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </Layout>

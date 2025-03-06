@@ -7,7 +7,7 @@ const UserProfile = () => {
 
     const [userprofile, setUserProfile] = useState({
         username : username,
-        password : '',
+        // password : '',
         newpassword :'',
         confirmnewpass : '',
     });
@@ -26,9 +26,10 @@ const UserProfile = () => {
         try {
             const formdata = new FormData();
             formdata.append('username', userprofile.username);
-            formdata.append('password', userprofile.password);
-            formdata.append('confirmpass', confirmpass)
-            const response = await fetch(`http://192.168.1.25/Queue/login.php?do=login&hotel_id=${filepath}`, {
+            formdata.append('new_password', userprofile.newpassword);
+            formdata.append('token', token);
+          
+            const response = await fetch(`http://192.168.1.25/Queue/Hotel_Admin/user.php?for=changePassword`, {
                 method: 'POST',
                 body: formdata,
             });
@@ -55,7 +56,7 @@ const UserProfile = () => {
 
     const toggleconfPass = (id) => {
         const passwordInput = document.getElementById(id);
-        passwordInput.type = passwordInput.type === 'confirm' ? 'text' : 'password';
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
     }
     
     return (
@@ -89,7 +90,7 @@ const UserProfile = () => {
                                     name="username"
                                 />
                             </div>
-                                <div className="mb-3" style={{position:'relative'}}  >
+                                {/* <div className="mb-3" style={{position:'relative'}}  >
                                 <label htmlFor="password" className="form-label">Password</label>
                                 <input
                                     type="password"
@@ -100,7 +101,7 @@ const UserProfile = () => {
                                     id="password"
                                 />
                                 <i class="fa-solid fa-eye" style={{position: 'absolute', top:'40px', right:'10px'}} onClick={() => {togglePass('password')}}></i>
-                            </div>
+                            </div> */}
                             <div className="mb-3" style={{position:'relative'}}>
                                 <label htmlFor="password" className="form-label">New Password</label>
                                 <input
